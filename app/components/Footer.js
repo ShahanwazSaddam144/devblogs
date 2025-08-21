@@ -66,7 +66,7 @@ const Footer = () => {
             <a href="#" className="hover:text-indigo-500">
               <Instagram size={25} />
             </a>
-            <a href="#" className="hover:text-indigo-500">
+            <a href="https://github.com/ShahanwazSaddam144/devblogs" target="_blank" className="hover:text-indigo-500">
               <Github size={25} />
             </a>
             <a href="#" className="hover:text-indigo-500">
