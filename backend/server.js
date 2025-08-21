@@ -5,6 +5,10 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const botProtection = require('./middleware/bot');
 const userRoutes = require('./routes/userRoutes');
+const review = require('./controllers/review');
+const YourBlogs = require('./controllers/your_blogs');
+const newsemail = require('./controllers/newsemail');
+const contact = require('./controllers/contact');
 
 dotenv.config();
 
@@ -32,6 +36,10 @@ app.use(limiter);
 
 // Routes
 app.use("/api/user", userRoutes);
+app.use('/',review);
+app.use('/', YourBlogs);
+app.use('/', newsemail);
+app.use('/', contact);
 
 // === MongoDB Connection ===
 mongoose
