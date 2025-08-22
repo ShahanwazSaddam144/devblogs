@@ -9,6 +9,9 @@ const review = require('./controllers/review');
 const YourBlogs = require('./controllers/your_blogs');
 const newsemail = require('./controllers/newsemail');
 const contact = require('./controllers/contact');
+const verify = require('./controllers/verify');
+const email = require('./controllers/email')
+const helmet = require('helmet');
 
 dotenv.config();
 
@@ -16,7 +19,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // === Middleware ===
-app.use(cors());
+app.use(helmet());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.json());
 app.use(botProtection);
 
@@ -32,14 +39,23 @@ const limiter = rateLimit({
   max: 100,
   message: 'Too many requests. Please try again later.',
 });
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Too many requests. Please try again later.',
+});
+
 app.use(limiter);
 
 // Routes
-app.use("/api/user", userRoutes);
-app.use('/',review);
+app.use("/api/user", authLimiter, userRoutes);
+app.use('/', review);
 app.use('/', YourBlogs);
 app.use('/', newsemail);
 app.use('/', contact);
+app.use('/email', email);
+app.use('/verify', verify);
 
 // === MongoDB Connection ===
 mongoose

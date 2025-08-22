@@ -17,6 +17,7 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  console.log(session.user)
 
   return (
     <nav className=" text-white bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 sticky top-0 z-50 shadow-sm">
@@ -55,8 +56,10 @@ const Navbar = () => {
           {session?.user && (
             <li className="relative group">
               <Image
-                src={session.user.image}
-                alt="avatar"
+                src={
+                  session.user.image || "/default-avatar.png"
+                }
+                alt={session.user.name || session.user.email || "avatar"}
                 width={36}
                 height={36}
                 className="rounded-full cursor-pointer border border-gray-300 dark:border-gray-700"
@@ -69,6 +72,7 @@ const Navbar = () => {
               </button>
             </li>
           )}
+
         </ul>
 
         {/* Mobile Hamburger */}
@@ -110,7 +114,7 @@ const Navbar = () => {
           {session?.user && (
             <li className="flex flex-col items-center gap-2">
               <Image
-                src={session.user.image}
+                src={session?.user?.image}
                 alt="avatar"
                 width={40}
                 height={40}

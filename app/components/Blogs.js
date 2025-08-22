@@ -45,8 +45,7 @@ const Blogs = () => {
           ))}
         </div>
       </section>
-
-      {/* Blog Cards */}
+      
       <section id="All" className="mt-12 px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 cursor-pointer">
           {blogs.map((blog) => (
@@ -55,14 +54,14 @@ const Blogs = () => {
               className="bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               {/* Blog Image */}
-              <Image
+              {/* <Image
                 src={blog.Image_URL}
                 alt={blog.Heading}
                 width={1000}
                 height={1000}
                 className="object-cover w-full h-48"
                 priority
-              />
+              /> */}
 
               {/* Blog Content */}
               <div className="p-5">

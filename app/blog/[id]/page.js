@@ -48,13 +48,13 @@ const BlogDetails = () => {
 
       {/* Blog Image */}
       <div className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-6">
-        <Image
+        {/* <Image
           src={blog.Image_URL}
           alt={blog.Heading}
           fill
           className="object-cover"
-          priority
-        />
+          priority */}
+        {/* /> */}
       </div>
 
       {/* Blog Heading */}
