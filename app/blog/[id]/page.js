@@ -60,7 +60,7 @@ const BlogDetails = () => {
         <h1 className="text-3xl font-bold mb-4">{blog.Heading}</h1>
 
 
-        <p className="text-gray-600 mb-2">{blog.Title}</p>
+        <p className="text-gray-600 font-bold mb-2">{blog.Title}</p>
 
         <p className="text-lg text-gray-700 mb-6">{blog.Description}</p>
 

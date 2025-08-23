@@ -51,7 +51,7 @@ const Blogs = () => {
           {blogs.map((blog) => (
             <div
               key={blog._id}
-              className="bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              className="bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative w-full h-48">
                 <Image

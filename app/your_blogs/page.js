@@ -14,7 +14,6 @@ const Your_Blog = () => {
     Details: "",
     Description: "",
   });
-  const [responseMsg, setResponseMsg] = useState("");
   const [userBlogs, setUserBlogs] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -81,7 +80,7 @@ const Your_Blog = () => {
       data.append("Title", formData.Title);
       data.append("Details", formData.Details);
       data.append("Description", formData.Description);
-      if (formData.Image) data.append("image", formData.Image); // `image` matches `upload.single("image")` on backend
+      if (formData.Image) data.append("image", formData.Image); // backend expects `image`
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`, {
         method: "POST",
@@ -90,12 +89,10 @@ const Your_Blog = () => {
       });
 
       const body = await res.json();
-      console.log("POST response body:", body);
 
       if (res.ok) {
         toast.success("✅ Blog Created Successfully!");
         const createdBlog = body.blog || null;
-
         if (createdBlog && createdBlog._id) {
           setUserBlogs((prev) => [createdBlog, ...prev]);
         } else {
@@ -132,14 +129,16 @@ const Your_Blog = () => {
               onClick={async () => {
                 toast.dismiss(t.id);
                 try {
-                  const res = await fetch(`http://localhost:5000/yourblogs/${id}`, {
-                    method: "DELETE",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                  });
+                  const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs/${id}`,
+                    {
+                      method: "DELETE",
+                      credentials: "include",
+                      headers: { "Content-Type": "application/json" },
+                    }
+                  );
                   const data = await res.json();
                   if (res.ok) {
-                    // update local state
                     setUserBlogs((prev) => prev.filter((blog) => blog._id !== id));
                     toast.success(data.message || "✅ Blog deleted successfully!");
                   } else {
@@ -199,8 +198,9 @@ const Your_Blog = () => {
                   onDragOver={handleDrag}
                   onDragLeave={handleDrag}
                   onDrop={handleDrop}
-                  className={`w-full border border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer ${dragActive ? "border-indigo-500 bg-indigo-50" : "border-gray-300 bg-gray-50"
-                    }`}
+                  className={`w-full border border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer ${
+                    dragActive ? "border-indigo-500 bg-indigo-50" : "border-gray-300 bg-gray-50"
+                  }`}
                 >
                   <label className="font-medium text-black dark:text-black mb-2">
                     Upload Blog Image
@@ -290,17 +290,13 @@ const Your_Blog = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className={`w-full ${submitting ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"} text-white py-3 rounded-xl font-semibold transition duration-200`}
+                className={`w-full ${
+                  submitting ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
+                } text-white py-3 rounded-xl font-semibold transition duration-200`}
               >
                 {submitting ? "Publishing..." : "🚀 Publish Blog"}
               </button>
             </form>
-
-            {responseMsg && (
-              <p className="mt-6 text-center text-sm font-medium text-green-600 dark:text-green-400">
-                {responseMsg}
-              </p>
-            )}
           </div>
 
           {/* Render user's blogs */}
@@ -318,21 +314,31 @@ const Your_Blog = () => {
               {userBlogs.map((blog, index) => (
                 <div
                   key={blog._id ?? blog._tempId ?? index}
-                  className="border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className="bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
                   {blog.Image_URL && (
-                    <img src={blog.Image_URL} alt={blog.Title} className="w-full h-48 object-cover" />
+                    <img
+                      src={blog.Image_URL}
+                      alt={blog.Title}
+                      className="w-full h-48 object-cover"
+                    />
                   )}
                   <div className="p-6 text-center">
-                    <h3 className="font-bold text-xl text-gray-900 dark:text-indigo-700">{blog.Heading || "Untitled"}</h3>
-                    <p className="text-gray-800 text-sm mt-1">{blog.Title || ""}</p>
-                    <p className="text-gray-900 mt-3">{blog.Description || ""}</p>
+                    <p className="font-bold text-gray-300 text-[20px]">{blog.Name}</p>
+                    <h3 className="font-bold text-xl text-gray-900 dark:text-indigo-500">
+                      {blog.Heading || "Untitled"}
+                    </h3>
+                    <p className="text-gray-200 text-sm mt-1">{blog.Title || ""}</p>
 
-                    <button onClick={(e) => handleDelete(blog._id, e)} className="mt-4 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors duration-200">Delete</button>
+                    <button
+                      onClick={(e) => handleDelete(blog._id, e)}
+                      className="mt-4 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors duration-200"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
-
             </div>
           </div>
         </div>
