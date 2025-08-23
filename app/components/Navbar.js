@@ -23,7 +23,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center max-w-6xl mx-auto">
         {/* Logo */}
         <h1 className="text-2xl md:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
-          DevBlogs
+          DevBlogss
         </h1>
 
         {/* Desktop links */}
