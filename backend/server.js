@@ -80,6 +80,15 @@ app.use('/', contact);
 app.use('/email', email);
 app.use('/verify', verify);
 app.use('/', valid);
+app.post("/logout", (req, res) => {
+  res.clearCookie("auth_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+  return res.status(200).json({ message: "Logged out successfully" });
+});
+
 
 // === MongoDB Connection ===
 mongoose.connect(process.env.MONGO_URI, {

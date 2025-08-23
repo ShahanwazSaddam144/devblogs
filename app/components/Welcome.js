@@ -2,22 +2,22 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-const Welcome = () => {
+const Welcome = ({ name }) => {
   const { data: session } = useSession();
 
   return (
     <section className="mt-12 px-4 sm:px-6 lg:px-8 flex justify-center">
       <div className=" rounded-2xl 
          p-6 sm:p-10 w-full max-w-3xl text-center">
-        
+
         {/* Heading */}
         <div className="block sm:inline-flex">
-        <h1 className="text-[35px] mb-2 font-extrabold text-gray-900">
-          Welcome back,</h1> &nbsp;
+          <h1 className="text-[35px] mb-2 font-extrabold text-gray-900">
+            Welcome back,</h1> &nbsp;
           <span className="text-indigo-600 text-[35px] font-bold ">
-            {session?.user?.name || "Guest"}
+            {session?.user?.name || name || 'Guest'}
           </span>
-          </div>
+        </div>
 
         {/* Subtitle */}
         <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-xl text-gray-600">

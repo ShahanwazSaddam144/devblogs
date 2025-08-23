@@ -36,7 +36,7 @@ exports.signup = async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     const user = new User({ name, email, password: hashed, verified: false });
     await user.save();
-    const verificationToken = jwt.sign({ id: user._id, email }, process.env.VERIFICATION_SECRET, { expiresIn: "7d" });
+    const verificationToken = jwt.sign({ id: user._id, email, name }, process.env.VERIFICATION_SECRET, { expiresIn: "7d" });
     const backendUrl = process.env.BACKEND_URL;
 
     const server = await fetch(`${backendUrl}/email/send-verification`, {
@@ -48,7 +48,7 @@ exports.signup = async (req, res) => {
         key: process.env.EMAIL_API_KEY
       })
     });
-    const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id, email, name }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     res.cookie("auth_token", token, {
       httpOnly: true,
@@ -78,12 +78,12 @@ exports.login = async (req, res) => {
 
 
   try {
-    const user = await User.findOne({ email }).select("+password +verified +_id");
+    const user = await User.findOne({ email }).select("+password +verified +name +_id");
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
     if (!user.verified) {
-      const verificationToken = jwt.sign({ id: user._id, email }, process.env.VERIFICATION_SECRET, { expiresIn: "7d" });
+      const verificationToken = jwt.sign({ id: user._id, email, name: user.name }, process.env.VERIFICATION_SECRET, { expiresIn: "7d" });
       const backendUrl = process.env.BACKEND_URL;
       const server = await fetch(`${backendUrl}/email/send-verification`, {
         method: "POST",
@@ -99,7 +99,7 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Incorrect password" });
 
-    const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id, email, name: user.name }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     res.cookie("auth_token", token, {
       httpOnly: true,

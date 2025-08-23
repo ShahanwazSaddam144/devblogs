@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 export default function Page() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { data: session, status } = useSession();
+  const [userName, setUserName] = useState("Guest");
   const router = useRouter();
 
   // Load theme from localStorage
@@ -29,35 +30,6 @@ export default function Page() {
     }
   }, []);
 
-  // Send authenticated user info to backend
-  useEffect(() => {
-    if (session?.user?.email) {
-      const sendUserToBackend = async () => {
-        try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/oauth`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({
-                name: session.user.name,
-                email: session.user.email,
-                image: session.user.image,
-              }),
-            }
-          );
-
-          const data = await res.json();
-          console.log("✅ User sent to backend:", data);
-        } catch (error) {
-          console.error("❌ Failed to send user to backend:", error);
-        }
-      };
-
-      sendUserToBackend();
-    }
-  }, [session]);
 
   // Check authentication on page load
   useEffect(() => {
@@ -70,10 +42,12 @@ export default function Page() {
             withCredentials: true,
           }
         );
-
         if (!data.isValid) {
           router.push("/login");
         }
+        const name = data.name;
+        console.log(name)
+        setUserName(name);
       } catch (err) {
         console.error("❌ Auth check failed:", err);
       }
@@ -90,7 +64,7 @@ export default function Page() {
   return (
     <>
       <Navbar />
-      <Welcome />
+      <Welcome name={userName} />
       <Blogs />
       <NewsEmail />
       <Footer />
