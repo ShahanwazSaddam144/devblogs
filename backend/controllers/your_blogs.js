@@ -18,7 +18,7 @@ router.post("/yourblogs", async (req, res) => {
     const newYourBlogs = new YourBlogs({
       id:1,
       Name,
-      Image_URL: 'a',
+      Image_URL: null,
       Heading,
       Title,
       Details,
