@@ -5,7 +5,6 @@ import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-
   Menu,
   X,
   Home,
@@ -19,23 +18,17 @@ const Navbar = () => {
   const { data: session } = useSession();
 
   return (
-    <nav className=" text-white bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 sticky top-0 z-50 shadow-sm">
+    <nav className=" text-black p-4  ">
       <div className="flex justify-between items-center max-w-6xl mx-auto">
         {/* Logo */}
-        <h1 className="text-2xl md:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
+        <Link href="/">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-indigo-600">
           DevBlogs
         </h1>
+        </Link>
 
         {/* Desktop links */}
         <ul className="hidden md:flex space-x-6 items-center font-medium">
-          <li>
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-3 py-2 rounded hover:text-gray-100 hover:bg-indigo-100 dark:hover:bg-indigo-800 transition"
-            >
-              <Home size={18} /> Home
-            </Link>
-          </li>
           <li>
             <Link
               href="/your_blogs"
@@ -85,15 +78,7 @@ const Navbar = () => {
 
       {/* Mobile dropdown */}
       {isOpen && (
-        <ul className="md:hidden mt-4 space-y-4 w-[180px] mx-auto text-center bg-white dark:bg-gray-900 rounded-lg py-4 shadow-lg border border-gray-200 dark:border-gray-700">
-          <li>
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded hover:bg-indigo-100 dark:hover:bg-indigo-800 transition"
-            >
-              <Home size={18} /> Home
-            </Link>
-          </li>
+        <ul className="md:hidden mt-4 space-y-4 w-[180px] mx-auto text-center rounded-lg py-4">
           <li>
             <Link
               href="/your_blogs"

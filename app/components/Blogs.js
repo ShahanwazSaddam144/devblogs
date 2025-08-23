@@ -26,7 +26,7 @@ const Blogs = () => {
     <>
       {/* Section Heading */}
       <section className="mt-20 px-4 sm:px-6 lg:px-8" id="blogs">
-        <h1 className="text-center font-extrabold text-3xl sm:text-4xl md:text-5xl text-gray-900">
+        <h1 className="text-center font-extrabold text-3xl sm:text-4xl md:text-5xl text-indigo-700">
           Blogs
         </h1>
 
