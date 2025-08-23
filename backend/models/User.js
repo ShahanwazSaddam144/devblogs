@@ -5,7 +5,15 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   verified: { type: Boolean, default: false },
-  image: String,
+  createdAt: { type: Date, default: Date.now },
 });
+
+userSchema.index(
+  { createdAt: 1 },
+  {
+    expireAfterSeconds: 86400 * 3,
+    partialFilterExpression: { verified: false },
+  }
+);
 
 module.exports = mongoose.model("authUser", userSchema);
