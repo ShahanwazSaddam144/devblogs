@@ -12,7 +12,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("http://localhost:5000/yourblogs"); 
+        const res = await fetch("http://localhost:5000/yourblogs");
         const data = await res.json();
         setBlogs(data);
       } catch (err) {
@@ -45,7 +45,7 @@ const Blogs = () => {
           ))}
         </div>
       </section>
-      
+
       <section id="All" className="mt-12 px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 cursor-pointer">
           {blogs.map((blog) => (
@@ -53,15 +53,15 @@ const Blogs = () => {
               key={blog._id}
               className="bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              {/* Blog Image */}
-              {/* <Image
-                src={blog.Image_URL}
-                alt={blog.Heading}
-                width={1000}
-                height={1000}
-                className="object-cover w-full h-48"
-                priority
-              /> */}
+              <div className="relative w-full h-48">
+                <Image
+                  src={blog.Image_URL}
+                  alt={blog.Heading}
+                  fill
+                  className="object-cover rounded-lg"
+                />
+              </div>
+
 
               {/* Blog Content */}
               <div className="p-5">

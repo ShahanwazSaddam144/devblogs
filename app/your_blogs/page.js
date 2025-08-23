@@ -75,37 +75,30 @@ const Your_Blog = () => {
     setSubmitting(true);
 
     try {
-      const payload = {
-        Name: formData.Name,
-        Heading: formData.Heading,
-        Title: formData.Title,
-        Details: formData.Details,
-        Description: formData.Description,
-      };
+      const data = new FormData();
+      data.append("Name", formData.Name);
+      data.append("Heading", formData.Heading);
+      data.append("Title", formData.Title);
+      data.append("Details", formData.Details);
+      data.append("Description", formData.Description);
+      if (formData.Image) data.append("image", formData.Image); // `image` matches `upload.single("image")` on backend
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        body: data,
         credentials: "include",
-        body: JSON.stringify(payload),
       });
 
       const body = await res.json();
-      console.log("POST response body:", body); // <-- inspect shape
+      console.log("POST response body:", body);
 
       if (res.ok) {
         toast.success("✅ Blog Created Successfully!");
+        const createdBlog = body.blog || null;
 
-        // Normalize possible shapes:
-        const created =
-          (body && (body.blog || body.createdBlog || body.created || body.data)) ||
-          (body && body._id ? body : null);
-
-        if (created && created._id) {
-          // server returned the created blog with an _id — prepend it
-          setUserBlogs((prev) => [created, ...prev]);
+        if (createdBlog && createdBlog._id) {
+          setUserBlogs((prev) => [createdBlog, ...prev]);
         } else {
-          // server didn't return the created doc — re-fetch authoritative list
           await fetchBlogs();
         }
       } else {
@@ -327,8 +320,8 @@ const Your_Blog = () => {
                   key={blog._id ?? blog._tempId ?? index}
                   className="border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
-                  {blog.Image && (
-                    <img src={`http://localhost:5000/uploads/${blog.Image}`} alt={blog.Title} className="w-full h-48 object-cover" />
+                  {blog.Image_URL && (
+                    <img src={blog.Image_URL} alt={blog.Title} className="w-full h-48 object-cover" />
                   )}
                   <div className="p-6 text-center">
                     <h3 className="font-bold text-xl text-gray-900 dark:text-indigo-700">{blog.Heading || "Untitled"}</h3>

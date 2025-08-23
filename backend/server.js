@@ -10,10 +10,12 @@ const YourBlogs = require('./controllers/your_blogs');
 const newsemail = require('./controllers/newsemail');
 const contact = require('./controllers/contact');
 const verify = require('./controllers/verify');
-const valid = require('./controllers/valid')
+const valid = require('./controllers/valid');
 const cookieParser = require('cookie-parser');
-const email = require('./controllers/email')
+const email = require('./controllers/email');
 const helmet = require('helmet');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
 dotenv.config();
 
@@ -28,7 +30,6 @@ app.use(cors({
   credentials: true,
 }));
 app.use(cookieParser());
-
 app.use(botProtection);
 
 // Request Logging
@@ -37,22 +38,40 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rate Limiting (15 min window, 100 max requests)
+// Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'Too many requests. Please try again later.',
 });
-
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
   message: 'Too many requests. Please try again later.',
 });
-
 app.use(limiter);
 
-// Routes
+// === Cloudinary Config ===
+cloudinary.config({
+  cloud_name: "dhm5mjg3d",
+  api_key: "376115815749441",
+  api_secret: "-r3Tuj7Wvy1AyuERuO6gboxUoTw",
+});
+
+// === Multer Setup ===
+const upload = multer({ dest: 'uploads/' });
+
+// === Upload Route ===
+app.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    res.json({ url: result.secure_url }); // Return CDN URL
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// === Routes ===
 app.use("/api/user", authLimiter, userRoutes);
 app.use('/', review);
 app.use('/', YourBlogs);
@@ -63,11 +82,10 @@ app.use('/verify', verify);
 app.use('/', valid);
 
 // === MongoDB Connection ===
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => {
     console.log('✅ MongoDB connected');
     app.listen(PORT, () =>
