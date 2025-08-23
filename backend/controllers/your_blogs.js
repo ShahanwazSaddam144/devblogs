@@ -46,7 +46,6 @@ router.post("/yourblogs", authenticate, async (req, res) => {
   }
 });
 
-// ✅ Get all blogs (latest first)
 router.get("/yourblogs", async (req, res) => {
   try {
     const yourblogs = await YourBlogs.find().sort({ createdAt: -1 });
@@ -57,7 +56,6 @@ router.get("/yourblogs", async (req, res) => {
   }
 });
 
-// ✅ Get blogs of logged-in user
 router.get("/userBlog", authenticate, async (req, res) => {
   try {
     const yourblogs = await YourBlogs.find({ email: req.userEmail }).sort({ createdAt: -1 });
