@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 const Your_Blog = () => {
   const [formData, setFormData] = useState({
     Name: "",
-    Image: null, // file object instead of URL
+    Image: null, 
     Heading: "",
     Title: "",
     Details: "",
@@ -23,7 +23,7 @@ const Your_Blog = () => {
     const fetchBlogs = async () => {
       try {
         const res = await fetch("http://localhost:5000/yourblogs", {
-          credentials: "include", // if needed for auth
+          credentials: "include", 
         });
         const data = await res.json();
         setUserBlogs(data.blogs || []);
@@ -84,7 +84,6 @@ const Your_Blog = () => {
       setResponseMsg("⚠️ Server unreachable.");
     }
 
-    // Reset form
     setFormData({
       Name: "",
       Image: null,
@@ -94,6 +93,33 @@ const Your_Blog = () => {
       Description: "",
     });
   };
+
+const handleDelete = async (id, e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(`http://localhost:5000/yourblogs/${id}`, {
+      method: "DELETE",
+      credentials: "include", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message); 
+      setBlogs((prev) => prev.filter((blog) => blog._id !== id));
+    } else {
+      alert(data.message || "❌ Failed to delete blog.");
+    }
+  } catch (err) {
+    console.error("Error deleting blog:", err);
+    alert("❌ Something went wrong.");
+  }
+};
+
 
   return (
     <>
@@ -249,6 +275,7 @@ const Your_Blog = () => {
                     <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">{blog.Title}</p>
                     <p className="text-gray-700 dark:text-gray-200 mt-2">{blog.Description}</p>
                   </div>
+                  <button onClick={handleDelete}>Delete</button>
                 </div>
               ))}
             </div>
