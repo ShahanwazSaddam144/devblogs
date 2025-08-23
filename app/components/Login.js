@@ -65,6 +65,10 @@ export default function LoginPage() {
         } catch (err) {
             toast.dismiss();
             toast.error(err.response.data.message);
+            const { redirectTo } = err.response.data;
+            if (redirectTo) {
+                router.push(redirectTo);
+            }
             if (err.status === 429) {
                 toast.dismiss();
                 toast.error('Too many request');

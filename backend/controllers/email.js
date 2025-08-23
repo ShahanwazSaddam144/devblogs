@@ -3,26 +3,26 @@ const router = express.Router();
 const transporter = require("../utils/mailer");
 
 router.post("/send-verification", async (req, res) => {
-    if (req.method !== "POST") {
-        return res.status(405).json({ message: "Method not allowed" });
-    }
-    if (req.body.key !== process.env.EMAIL_API_KEY) {
-        return res.status(403).json({ message: "Forbidden" });
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+  if (req.body.key !== process.env.EMAIL_API_KEY) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
 
-    const { to, token } = req.body;
+  const { to, token } = req.body;
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify?token=${token}`;
-    const safeCompany = "DevBlogs@buttnetworks";
-    const safeName = to.split("@")[0] || "User";
-    const logoUrl = ""; // or leave as "" if no logo
-    const supportEmail = "support@devblogs.com";
-    try {
-        await transporter.sendMail({
-            from: `"DevBlogs" <${process.env.EMAIL_USER}>`,
-            to,
-            subject: "Verify your DevBlogs account",
-            html: `<!doctype html>
+  const verificationUrl = `${process.env.FRONTEND_URL}/verify?token=${token}`;
+  const safeCompany = "DevBlogs@buttnetworks";
+  const safeName = to.split("@")[0] || "User";
+  const logoUrl = ""; // or leave as "" if no logo
+  const supportEmail = "support@devblogs.com";
+  try {
+    await transporter.sendMail({
+      from: `"DevBlogs" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: "Verify your DevBlogs account",
+      html: `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -110,12 +110,88 @@ router.post("/send-verification", async (req, res) => {
   </table>
 </body>
 </html>`
-        });
-        res.json({ message: "Verification email sent" });
-    } catch (err) {
-        console.error("Email send error:", err);
-        res.status(500).json({ message: "Failed to send email" });
-    }
+    });
+    res.json({ message: "Verification email sent" });
+  } catch (err) {
+    console.error("Email send error:", err);
+    res.status(500).json({ message: "Failed to send email" });
+  }
+});
+router.post("/send-welcome", async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+
+  // Simple API key check
+  if (req.body.key !== process.env.EMAIL_API_KEY) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const { to } = req.body;
+
+  const safeCompany = "DevBlogs@buttnetworks";
+  const safeName = to.split("@")[0] || "User";
+  const logoUrl = ""; 
+  const supportEmail = "support@devblogs.com";
+
+  try {
+    await transporter.sendMail({
+      from: `"DevBlogs" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: "Welcome to DevBlogs!",
+      html: `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Welcome to DevBlogs</title>
+  <style>
+    body { margin:0; padding:0; font-family: "Helvetica Neue", Arial, sans-serif; background:#f4f6fb; }
+    .container { width:100%; max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 18px rgba(15,23,42,0.06); }
+    .header { padding:22px; text-align:left; }
+    .logo { max-height:40px; }
+    .content { padding:28px; color:#0f172a; line-height:1.45; }
+    h1 { margin:0 0 8px 0; font-size:20px; color:#0f172a; }
+    p { margin:12px 0; color:#475569; font-size:15px; }
+    .footer { padding:18px; text-align:center; font-size:12px; color:#9aa4b2; }
+  </style>
+</head>
+<body>
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f4f6fb; padding:28px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" class="container" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td class="header">
+              ${logoUrl ? `<img src="${logoUrl}" alt="${safeCompany} logo" class="logo" />` : `<strong style="font-size:18px;">${safeCompany}</strong>`}
+            </td>
+          </tr>
+          <tr>
+            <td class="content">
+              <h1>Welcome, ${safeName}!</h1>
+              <p>Thanks for joining <strong>${safeCompany}</strong>! We're thrilled to have you on board.</p>
+              <p>Start exploring blogs, connecting with the community, and sharing your ideas today.</p>
+              <p>If you have any questions or need help, feel free to reach out at <a href="mailto:${supportEmail}">${supportEmail}</a>.</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="footer">
+              <div style="margin-top:8px; color:#cbd5e1;">© ${new Date().getFullYear()} ${safeCompany}. All rights reserved.</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+    });
+
+    res.json({ message: "Welcome email sent successfully" });
+  } catch (err) {
+    console.error("Welcome email send error:", err);
+    res.status(500).json({ message: "Failed to send welcome email" });
+  }
 });
 
 module.exports = router;

@@ -17,7 +17,6 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
-  console.log(session.user)
 
   return (
     <nav className=" text-white bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 sticky top-0 z-50 shadow-sm">

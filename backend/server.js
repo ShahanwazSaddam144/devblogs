@@ -10,6 +10,8 @@ const YourBlogs = require('./controllers/your_blogs');
 const newsemail = require('./controllers/newsemail');
 const contact = require('./controllers/contact');
 const verify = require('./controllers/verify');
+const valid = require('./controllers/valid')
+const cookieParser = require('cookie-parser');
 const email = require('./controllers/email')
 const helmet = require('helmet');
 
@@ -24,6 +26,7 @@ app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
 }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(botProtection);
 
@@ -56,6 +59,7 @@ app.use('/', newsemail);
 app.use('/', contact);
 app.use('/email', email);
 app.use('/verify', verify);
+app.use('/', valid);
 
 // === MongoDB Connection ===
 mongoose

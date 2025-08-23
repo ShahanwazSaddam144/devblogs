@@ -1,5 +1,6 @@
 const express = require("express");
 const YourBlogs = require("../models/your_blogs");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -10,6 +11,9 @@ router.post("/yourblogs", async (req, res) => {
   if (!Name || !Image_URL || !Heading || !Title || !Details || !Description) {
     return res.status(400).json({ message: "All fields are required." });
   }
+  const email = req?.cookies?.auth_token
+  const decoded = jwt.verify(email, process.env.JWT_SECRET);
+  const userEmail = decoded.email;
 
   try {
     const newYourBlogs = new YourBlogs({
@@ -19,6 +23,7 @@ router.post("/yourblogs", async (req, res) => {
       Title,
       Details,
       Description,
+      email: userEmail
     });
 
     await newYourBlogs.save();
@@ -39,6 +44,22 @@ router.get("/yourblogs", async (req, res) => {
     res.status(500).json({ message: "❌ Failed to fetch blogs." });
   }
 });
+
+router.get("/userBlog", async (req, res) => {
+  try {
+    const email = req?.cookies?.auth_token
+    const decoded = jwt.verify(email, process.env.JWT_SECRET);
+    const userEmail = decoded.email;
+    const yourblogs = await YourBlogs.find({ email: userEmail }).sort({ createdAt: -1 });
+    // Return blogs belonging to the authenticated user only.
+    // Each blog includes its unique id; access is protected via JWT.
+    res.status(200).json(yourblogs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "❌ Failed to fetch blogs." });
+  }
+});
+
 
 
 router.get("/yourblogs/:id", async (req, res) => {

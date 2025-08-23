@@ -48,7 +48,6 @@ exports.signup = async (req, res) => {
         key: process.env.EMAIL_API_KEY
       })
     });
-    const data = await server.json();
     const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     res.cookie("auth_token", token, {
@@ -58,7 +57,7 @@ exports.signup = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ message: "Signup successful" });
+    res.status(200).json({ message: "Signup successful", redirectTo: '/verification' });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ message: "Server error" });
@@ -77,10 +76,25 @@ exports.login = async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
+
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password +verified +_id");
     if (!user) {
       return res.status(400).json({ message: "User not found" });
+    }
+    if (!user.verified) {
+      const verificationToken = jwt.sign({ id: user._id, email }, process.env.VERIFICATION_SECRET, { expiresIn: "7d" });
+      const backendUrl = process.env.BACKEND_URL;
+      const server = await fetch(`${backendUrl}/email/send-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: email,
+          token: verificationToken,
+          key: process.env.EMAIL_API_KEY
+        })
+      });
+      return res.status(400).json({ message: "Account not verified. A new verification email has been sent.", redirectTo: '/verification' });
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Incorrect password" });
@@ -94,7 +108,7 @@ exports.login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ message: "Login successful", user: sanitizeUser(user) });
+    res.json({ message: "Login successful", user: sanitizeUser(user), redirectTo: '/' });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
