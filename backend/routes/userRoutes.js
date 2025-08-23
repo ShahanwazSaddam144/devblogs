@@ -6,7 +6,7 @@ const {
   oauthRegister,
 } = require("../controllers/userController");
 
-router.post("/signup", signup);
+router.post("/register", signup);
 router.post("/login", login);
 router.post("/oauth", oauthRegister);
 

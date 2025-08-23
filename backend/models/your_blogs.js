@@ -8,6 +8,8 @@ const yourBlogsSchema = new mongoose.Schema(
     Title: { type: String, required: true },
     Details: { type: String, required: true },
     Description: { type: String, required: true },
+    id: { type: String, required: true },
+    email: { type: String, required: true }
   },
   { timestamps: true }
 );
