@@ -54,12 +54,18 @@ const Blogs = () => {
               className="bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative w-full h-48">
-                <Image
-                  src={blog.Image_URL}
-                  alt={blog.Heading}
-                  fill
-                  className="object-cover rounded-lg"
-                />
+                {blog.Image_URL ? (
+                  <Image
+                    src={blog.Image_URL}
+                    alt={blog.Heading}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    No Image
+                  </div>
+                )}
               </div>
 
 
