@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 py-10">
       <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-        {/* Logo / Brand */}
+
         <div>
           <h1 className="text-3xl font-bold text-indigo-600">DevBlogs</h1>
           <p className="mt-3 text-gray-400">
@@ -19,7 +19,6 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Quick Links */}
         <div>
           <h2 className="text-lg font-semibold text-white mb-4">Quick Links</h2>
           <ul className="space-y-2">
@@ -58,7 +57,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Social / Extra */}
         <div>
           <h2 className="text-lg font-semibold text-white mb-4">Stay Connected</h2>
           <p className="text-gray-400 mb-4">Follow us on social platforms:</p>

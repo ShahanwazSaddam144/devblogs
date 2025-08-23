@@ -23,13 +23,14 @@ router.post("/yourblogs", authenticate, async (req, res) => {
   try {
     const { Name, Image_URL, Heading, Title, Details, Description } = req.body;
 
-    if (!Name || !Image_URL || !Heading || !Title || !Details || !Description) {
+    if (!Name || !Heading || !Title || !Details || !Description) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
     const newYourBlogs = new YourBlogs({
+      id: 1, // You may want to remove hardcoded id
       Name,
-      Image_URL,
+      Image_URL: null, // Image handling disabled for now
       Heading,
       Title,
       Details,

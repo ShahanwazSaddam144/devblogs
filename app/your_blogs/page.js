@@ -62,15 +62,19 @@ const Your_Blog = () => {
     e.preventDefault();
 
     try {
-      const form = new FormData();
-      for (const key in formData) {
-        if (formData[key]) form.append(key, formData[key]);
-      }
-
       const res = await fetch("http://localhost:5000/yourblogs", {
-        credentials: "include",
         method: "POST",
-        body: form,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          Name: formData.Name,
+          Heading: formData.Heading,
+          Title: formData.Title,
+          Details: formData.Details,
+          Description: formData.Description,
+        }),
       });
 
       if (res.ok) {
@@ -80,13 +84,13 @@ const Your_Blog = () => {
       } else {
         setResponseMsg("⚠️ Server error. Try again.");
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       setResponseMsg("⚠️ Server unreachable.");
     }
 
     setFormData({
       Name: "",
-      Image: null,
       Heading: "",
       Title: "",
       Details: "",
@@ -119,6 +123,7 @@ const handleDelete = async (id, e) => {
     alert("❌ Something went wrong.");
   }
 };
+
 
 
   return (
