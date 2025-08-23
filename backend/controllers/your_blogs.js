@@ -1,6 +1,10 @@
 const express = require("express");
 const YourBlogs = require("../models/your_blogs");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 
 const router = express.Router();
 
@@ -19,18 +23,38 @@ function authenticate(req, res, next) {
 }
 
 // ✅ Create a new blog
-router.post("/yourblogs", authenticate, async (req, res) => {
+
+// 1. Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "blogs",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+  },
+});
+const upload = multer({ storage });
+
+// 3. Update your route
+router.post("/yourblogs", authenticate, upload.single("image"), async (req, res) => {
   try {
-    const { Name, Image_URL, Heading, Title, Details, Description } = req.body;
+    const { Name, Heading, Title, Details, Description } = req.body;
 
     if (!Name || !Heading || !Title || !Details || !Description) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    // Cloudinary URL from uploaded file
+    const imageUrl = req.file?.path || null;
+
     const newYourBlogs = new YourBlogs({
-      id: 1, // You may want to remove hardcoded id
       Name,
-      Image_URL: null, // Image handling disabled for now
+      Image_URL: imageUrl,
       Heading,
       Title,
       Details,
@@ -39,12 +63,13 @@ router.post("/yourblogs", authenticate, async (req, res) => {
     });
 
     await newYourBlogs.save();
-    res.status(201).json({ message: "✅ Blog created successfully!" });
+    res.status(201).json({ message: "✅ Blog created successfully!", blog: newYourBlogs });
   } catch (err) {
     console.error("Error creating blog:", err.message);
     res.status(500).json({ message: "❌ Server error." });
   }
 });
+
 
 router.get("/yourblogs", async (req, res) => {
   try {
