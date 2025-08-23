@@ -6,9 +6,8 @@ const router = express.Router();
 
 // Create a new blog
 router.post("/yourblogs", async (req, res) => {
-  const { Name, Image_URL, Heading, Title, Details, Description } = req.body;
-
-  if (!Name || !Image_URL || !Heading || !Title || !Details || !Description) {
+  const { Name, Heading, Title, Details, Description } = req.body;
+  if (!Name || !Heading || !Title || !Details || !Description) {
     return res.status(400).json({ message: "All fields are required." });
   }
   const email = req?.cookies?.auth_token
@@ -17,8 +16,9 @@ router.post("/yourblogs", async (req, res) => {
 
   try {
     const newYourBlogs = new YourBlogs({
+      id:1,
       Name,
-      Image_URL,
+      Image_URL: 'a',
       Heading,
       Title,
       Details,
