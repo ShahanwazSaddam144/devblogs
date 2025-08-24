@@ -79,6 +79,58 @@ router.post("/yourblogs", authenticate, upload.single("image"), async (req, res)
   }
 });
 
-// Other GET and DELETE routes can remain the same
+
+router.get("/yourblogs", async (req, res) => {
+  try {
+    const yourblogs = await YourBlogs.find().sort({ createdAt: -1 });
+    res.status(200).json(yourblogs);
+  } catch (err) {
+    console.error("Error fetching blogs:", err.message);
+    res.status(500).json({ message: "❌ Failed to fetch blogs." });
+  }
+});
+
+router.get("/userBlog", authenticate, async (req, res) => {
+  try {
+    const yourblogs = await YourBlogs.find({ email: req.userEmail }).sort({ createdAt: -1 });
+    res.status(200).json(yourblogs);
+  } catch (err) {
+    console.error("Error fetching user blogs:", err.message);
+    res.status(500).json({ message: "❌ Failed to fetch blogs." });
+  }
+});
+
+
+router.get("/yourblogs/:id", async (req, res) => {
+  try {
+    const blog = await YourBlogs.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).json({ message: "❌ Blog not found." });
+    }
+    res.status(200).json(blog);
+  } catch (err) {
+    console.error("Error fetching blog:", err.message);
+    res.status(500).json({ message: "❌ Failed to fetch blog." });
+  }
+});
+
+
+router.delete("/yourblogs/:id", authenticate, async (req, res) => {
+  try {
+    const blog = await YourBlogs.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).json({ message: "❌ Blog not found." });
+    }
+    if (blog.email !== req.userEmail) {
+      return res.status(403).json({ message: "❌ You can only delete your own blogs." });
+    }
+    await YourBlogs.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "✅ Blog deleted successfully!" });
+  } catch (err) {
+    console.error("Error deleting blog:", err.message);
+    res.status(500).json({ message: "❌ Failed to delete blog." });
+  }
+});
+
 
 module.exports = router;

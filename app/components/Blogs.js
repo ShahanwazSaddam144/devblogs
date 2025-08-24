@@ -6,13 +6,18 @@ import Image from "next/image";
 import { ArrowBigRight } from "lucide-react";
 
 const Blogs = () => {
+  const fetchOptions = {
+    credentials: "include"
+  };
   const [blogs, setBlogs] = useState([]);
 
   // Fetch blogs from backend
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`,
+          fetchOptions,
+        );
         const data = await res.json();
         setBlogs(data);
       } catch (err) {

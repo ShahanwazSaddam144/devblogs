@@ -53,7 +53,6 @@ export default function Page() {
       }
     };
 
-    // Only run if unauthenticated
     if (status === "unauthenticated") {
       checkAuth();
     }

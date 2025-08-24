@@ -80,7 +80,7 @@ const Your_Blog = () => {
       data.append("Title", formData.Title);
       data.append("Details", formData.Details);
       data.append("Description", formData.Description);
-      if (formData.Image) data.append("image", formData.Image); // backend expects `image`
+      if (formData.Image) data.append("image", formData.Image);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`, {
         method: "POST",
