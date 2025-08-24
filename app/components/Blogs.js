@@ -12,7 +12,7 @@ const Blogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("http://localhost:5000/yourblogs");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/yourblogs`);
         const data = await res.json();
         setBlogs(data);
       } catch (err) {
