@@ -106,13 +106,7 @@ const Navbar = () => {
           </li>
           <li className="flex flex-col items-center gap-2">
             {session?.user && (
-              <Image
-                src={session.user.image || "/default-avatar.png"}
-                alt="avatar"
-                width={40}
-                height={40}
-                className="rounded-full border border-gray-300 dark:border-gray-700"
-              />
+              <span>{ session.user.name || session.user.email }</span>
             )}
             <button
               onClick={handleLogout}
