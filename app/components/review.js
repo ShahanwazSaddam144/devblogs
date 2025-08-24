@@ -9,7 +9,7 @@ const Review = () => {
     Review: "",
   });
 
-  const [reviews, setReviews] = useState([]); 
+  const [reviews, setReviews] = useState([]);
   const [responseMsg, setResponseMsg] = useState("");
 
   const handleChange = (e) => {
@@ -20,7 +20,7 @@ const Review = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/review", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -38,7 +38,7 @@ const Review = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch("http://localhost:5000/review");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/review`);
       const data = await res.json();
       setReviews(data); // ✅ save reviews in state
     } catch (err) {
@@ -47,7 +47,7 @@ const Review = () => {
   };
 
   useEffect(() => {
-    fetchReviews(); 
+    fetchReviews();
   }, []);
 
 

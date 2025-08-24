@@ -38,7 +38,7 @@ const Navbar = () => {
           </h1>
         </Link>
 
-        
+
         <ul className="hidden md:flex space-x-6 items-center font-medium">
           <li>
             <Link
@@ -57,17 +57,11 @@ const Navbar = () => {
             </Link>
           </li>
 
-          {(session?.user || true) && ( 
+          {(session?.user || true) && (
             <>
               {session?.user && (
                 <li>
-                  <Image
-                    src={session.user.image || "/default-avatar.png"}
-                    alt={session.user.name || session.user.email || "avatar"}
-                    width={36}
-                    height={36}
-                    className="rounded-full border border-gray-300 dark:border-gray-700"
-                  />
+                  {session.user.name || session.user.email}
                 </li>
               )}
               <li>
@@ -82,7 +76,7 @@ const Navbar = () => {
           )}
         </ul>
 
-    
+
         <button
           className="md:hidden text-2xl"
           onClick={() => setIsOpen(!isOpen)}
