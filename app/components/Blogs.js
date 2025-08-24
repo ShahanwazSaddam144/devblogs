@@ -51,7 +51,7 @@ const Blogs = () => {
           {blogs.map((blog) => (
             <div
               key={blog._id}
-              className="bg-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              className="bg-gray-200 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative w-full h-48">
                 {blog.Image_URL ? (
@@ -71,13 +71,13 @@ const Blogs = () => {
 
               {/* Blog Content */}
               <div className="p-5">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-bold text-gray-900 mb-1">
                   {blog.Heading}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                <p className="text-[18px] font-bold text-gray-800  mb-3">
                   {blog.Title}
                 </p>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+                <p className="text-gray-700  mb-4 line-clamp-2">
                   {blog.Description}
                 </p>
 

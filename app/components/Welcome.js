@@ -7,15 +7,15 @@ const Welcome = ({ name }) => {
 
   return (
     <section className="mt-12 px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div className=" rounded-2xl 
-         p-6 sm:p-10 w-full max-w-3xl text-center">
+      <div className="rounded-2xl p-6 sm:p-10 w-full max-w-3xl text-center">
 
         {/* Heading */}
-        <div className="block sm:inline-flex">
+        <div className="text-center">
           <h1 className="text-[35px] mb-2 font-extrabold text-gray-900">
-            Welcome back,</h1> &nbsp;
-          <span className="text-indigo-600 text-[35px] font-bold ">
-            {session?.user?.name || name || 'Guest'}
+            Welcome back,
+          </h1>
+          <span className="block text-indigo-600 text-[35px] font-bold break-words">
+            {session?.user?.name || name || "Guest"}
           </span>
         </div>
 
@@ -27,8 +27,11 @@ const Welcome = ({ name }) => {
         {/* Button */}
         <div className="mt-6 sm:mt-8 flex justify-center">
           <Link href="/your_blogs">
-            <button className="px-6 sm:px-8 py-3 rounded-xl font-semibold text-white 
-              bg-indigo-600 hover:bg-indigo-700 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg text-sm sm:text-base">
+            <button
+              className="px-6 sm:px-8 py-3 rounded-xl font-semibold text-white 
+              bg-indigo-600 hover:bg-indigo-700 cursor-pointer transition-all duration-200 
+              shadow-md hover:shadow-lg text-sm sm:text-base"
+            >
               Create Your First Blog
             </button>
           </Link>

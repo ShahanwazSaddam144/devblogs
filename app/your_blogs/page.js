@@ -314,7 +314,7 @@ const Your_Blog = () => {
               {userBlogs.map((blog, index) => (
                 <div
                   key={blog._id ?? blog._tempId ?? index}
-                  className="bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className="bg-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
                   {blog.Image_URL && (
                     <img
@@ -324,11 +324,10 @@ const Your_Blog = () => {
                     />
                   )}
                   <div className="p-6 text-center">
-                    <p className="font-bold text-gray-300 text-[20px]">{blog.Name}</p>
                     <h3 className="font-bold text-xl text-gray-900 dark:text-indigo-500">
                       {blog.Heading || "Untitled"}
                     </h3>
-                    <p className="text-gray-200 text-sm mt-1">{blog.Title || ""}</p>
+                    <p className="text-gray-800 font-bold text-[18px] mt-1">{blog.Title || ""}</p>
 
                     <button
                       onClick={(e) => handleDelete(blog._id, e)}
